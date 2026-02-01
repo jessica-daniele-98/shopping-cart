@@ -25,7 +25,7 @@ class ProductController {
   }
 
   @GetMapping("products/{name}")
-  ProductDTO getProduct(@PathVariable String name) {
+  ProductDTO getProductByName(@PathVariable String name) {
     return productService.getProductByName(name);
   }
 

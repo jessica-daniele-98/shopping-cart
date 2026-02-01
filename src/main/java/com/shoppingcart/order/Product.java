@@ -16,11 +16,6 @@ record Product(
     double priceWithVat
 ) {
 
-  static Product from(ProductDTO productDto) {
-    return new Product(null, productDto.productName(), productDto.description(), productDto.price(),
-        productDto.vatRate(), productDto.priceWithVat());
-  }
-
   double calculateVat() {
     return this.price * this.vatRate;
   }

@@ -1,7 +1,7 @@
 package com.shoppingcart.order;
 
 record ProductDTO(
-    String productName,
+    String name,
     String description,
     double price,
     double vatRate,
