@@ -14,7 +14,7 @@ interface OrderRepository extends MongoRepository<Order, String> {
   void deleteOrderByOrderId(String orderId);
 
   @Query("{ orderId:  ?0 }")
-  @Update("{ set: { totalPrice: ?1, totalVat:  ?2, totalWithVat:  ?3, products: ?4 } }")
+  @Update("{ $set: { totalPrice: ?1, totalVat:  ?2, totalWithVat:  ?3, products: ?4 } }")
   void updateOrder(String id, double totalPrice, double totalVat, double totalPriceWithVat, List<OrderItem> products);
 
 }
