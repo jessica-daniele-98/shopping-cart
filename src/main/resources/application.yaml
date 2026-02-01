@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: shopping-cart
+  mongodb:
+    uri: mongodb://localhost/test
+  data:
+    mongodb:
+      auto-index-creation: true
