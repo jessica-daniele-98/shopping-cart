@@ -20,17 +20,17 @@ class ProductController {
   private final ProductService productService;
 
   @GetMapping("/products")
-  List<ProductDTO> getProducts() {
+  List<ProductDto> getProducts() {
     return productService.getProducts();
   }
 
   @GetMapping("products/{name}")
-  ProductDTO getProductByName(@PathVariable String name) {
+  ProductDto getProductByName(@PathVariable String name) {
     return productService.getProductByName(name);
   }
 
   @PostMapping("/products")
-  ProductDTO addProduct(
+  ProductDto addProduct(
       @RequestBody
       @Valid
       AddProductRequest request) {

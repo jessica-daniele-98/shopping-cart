@@ -4,6 +4,8 @@ import com.shoppingcart.order.Order.OrderItem;
 import com.shoppingcart.order.OrderController.AddRequest;
 import com.shoppingcart.order.OrderController.RequestItem;
 import com.shoppingcart.order.OrderController.UpdateOrderRequest;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -17,22 +19,22 @@ class OrderService {
   private final OrderRepository orderRepository;
   private final ProductService productService;
 
-  List<OrderDTO> getOrders() {
+  List<OrderDto> getOrders() {
     return orderRepository
         .findAll()
         .stream()
-        .map(OrderDTO::from)
+        .map(OrderDto::from)
         .toList();
   }
 
-  OrderDTO getOrderByOrderId(String orderId) {
+  OrderDto getOrderByOrderId(String orderId) {
     return orderRepository
         .findByOrderId(orderId)
-        .map(OrderDTO::from)
+        .map(OrderDto::from)
         .orElseThrow(() -> new OrderNotFoundException("Order %s not found".formatted(orderId)));
   }
 
-  OrderDTO addOrder(AddRequest request) {
+  OrderDto addOrder(AddRequest request) {
     List<OrderItem> orderItems = request
         .products()
         .stream()
@@ -42,14 +44,13 @@ class OrderService {
     double totalVat = calculateTotalVat(orderItems);
     double totalPriceWithVat = calculateTotalPriceWithVat(orderItems);
     Order order = new Order(
-        null,
         UUID.randomUUID().toString(),
         LocalDate.now(),
         totalPrice,
         totalVat,
         totalPriceWithVat,
         orderItems);
-    return OrderDTO.from(orderRepository.save(order));
+    return OrderDto.from(orderRepository.save(order));
   }
 
   void updateOrder(String id, UpdateOrderRequest request) {
@@ -71,7 +72,7 @@ class OrderService {
   private double calculateTotalPriceWithVat(List<OrderItem> items) {
     List<Double> prices = items
         .stream()
-        .map(item -> item.product().priceWithVat() * item.quantity())
+        .map(item -> this.round(item.product().priceWithVat() * item.quantity()))
         .toList();
     return prices
         .stream()
@@ -82,7 +83,7 @@ class OrderService {
   private double calculateTotalPrice(List<OrderItem> items) {
     List<Double> prices = items
         .stream()
-        .map(item -> item.product().price() * item.quantity())
+        .map(item -> this.round(item.product().price() * item.quantity()))
         .toList();
     return prices
         .stream()
@@ -93,7 +94,7 @@ class OrderService {
   private double calculateTotalVat(List<OrderItem> items) {
     List<Double> vats = items
         .stream()
-        .map(item -> item.product().calculateVat() * item.quantity())
+        .map(item -> this.round(item.product().calculateVat() * item.quantity()))
         .toList();
     return vats
         .stream()
@@ -109,4 +110,10 @@ class OrderService {
     return new OrderItem(product, item.quantity());
   }
 
+  private double round(double val) {
+    return BigDecimal
+        .valueOf(val)
+        .setScale(2, RoundingMode.HALF_UP)
+        .doubleValue();
+  }
 }

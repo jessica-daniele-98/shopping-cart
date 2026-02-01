@@ -31,9 +31,9 @@ class ProductServiceTest {
   @BeforeEach
   void setup() {
     productService = new ProductService(productRepository);
-    mouseProduct = new Product(null, "mouse-m2",
+    mouseProduct = new Product("mouse-m2",
         "mouse Bluetooth compatible with different operating system", 120.50D, 0.22D, 147.01D);
-    keyboardProduct = new Product(null, "keyboard-d1",
+    keyboardProduct = new Product("keyboard-d1",
         "keyboard Bluetooth compatible with different operating system", 150.20D, 0.22D, 183.24D);
   }
 
@@ -42,10 +42,10 @@ class ProductServiceTest {
     given(productRepository.findAll())
         .willReturn(List.of(mouseProduct, keyboardProduct));
 
-    List<ProductDTO> products = productService.getProducts();
+    List<ProductDto> products = productService.getProducts();
 
     assertThat(products)
-        .containsExactlyInAnyOrder(ProductDTO.from(mouseProduct), ProductDTO.from(keyboardProduct));
+        .containsExactlyInAnyOrder(ProductDto.from(mouseProduct), ProductDto.from(keyboardProduct));
   }
 
   @Test
@@ -53,7 +53,7 @@ class ProductServiceTest {
     given(productRepository.findAll())
         .willReturn(List.of());
 
-    List<ProductDTO> products = productService.getProducts();
+    List<ProductDto> products = productService.getProducts();
 
     assertThat(products)
         .isEmpty();
@@ -64,10 +64,10 @@ class ProductServiceTest {
     given(productRepository.findByName("mouse-m2"))
         .willReturn(Optional.of(mouseProduct));
 
-    ProductDTO foundProduct = productService.getProductByName("mouse-m2");
+    ProductDto foundProduct = productService.getProductByName("mouse-m2");
 
     assertThat(foundProduct)
-        .isEqualTo(ProductDTO.from(mouseProduct));
+        .isEqualTo(ProductDto.from(mouseProduct));
   }
 
   @Test
@@ -103,21 +103,21 @@ class ProductServiceTest {
 
   @Test
   void addProductShouldAddProduct() {
-    Product pencil = new Product(null, "pencil", "pencil HB", 2.30D, 0.22D, 2.81D);
+    Product pencil = new Product("pencil", "pencil HB", 2.30D, 0.22D, 2.81D);
     given(productRepository.save(pencil))
         .willReturn(pencil);
 
-    ProductDTO saved = productService.addProduct(
+    ProductDto saved = productService.addProduct(
         new AddProductRequest("pencil", "pencil HB", 2.30D, 0.22D));
 
     assertThat(saved)
-        .extracting(ProductDTO::name)
+        .extracting(ProductDto::name)
         .isEqualTo(pencil.name());
     assertThat(saved)
-        .extracting(ProductDTO::price)
+        .extracting(ProductDto::price)
         .isEqualTo(pencil.price());
     assertThat(saved)
-        .extracting(ProductDTO::vatRate)
+        .extracting(ProductDto::vatRate)
         .isEqualTo(pencil.vatRate());
   }
 

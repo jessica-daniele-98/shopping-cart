@@ -15,17 +15,17 @@ class ProductService {
 
   private final ProductRepository productRepository;
 
-  List<ProductDTO> getProducts() {
+  List<ProductDto> getProducts() {
     return productRepository
         .findAll()
         .stream()
-        .map(ProductDTO::from)
+        .map(ProductDto::from)
         .toList();
   }
 
-  ProductDTO getProductByName(String name) throws ProductNotFoundException {
+  ProductDto getProductByName(String name) throws ProductNotFoundException {
     return this.findProductByName(name)
-        .map(ProductDTO::from)
+        .map(ProductDto::from)
         .orElseThrow(
             () -> new ProductNotFoundException("Product %s not found".formatted(name)));
   }
@@ -34,16 +34,15 @@ class ProductService {
     return productRepository.findByName(name);
   }
 
-  ProductDTO addProduct(AddProductRequest request) {
+  ProductDto addProduct(AddProductRequest request) {
     double priceWithVat = calculatePriceWithVat(request.price(), request.vatRate());
     Product product = new Product(
-        null,
         request.name(),
         request.description(),
         request.price(),
         request.vatRate(),
         priceWithVat);
-    return ProductDTO.from(productRepository.save(product));
+    return ProductDto.from(productRepository.save(product));
   }
 
   void deleteProduct(String name) {

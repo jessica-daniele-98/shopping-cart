@@ -26,9 +26,9 @@ class ProductRepositoryIT {
 
   @BeforeEach
   void setup() {
-    mouse = new Product("mouseId", "mouse-m2",
+    mouse = new Product("mouse-m2",
         "mouse Bluetooth compatible with different operating system", 120.50D, 0.22D, 147.01D);
-    keyboard = new Product("keyboard", "keyboard-d1",
+    keyboard = new Product("keyboard-d1",
         "keyboard Bluetooth compatible with different operating system", 150.20D, 0.22D, 183.24D);
     repository.saveAll(List.of(mouse, keyboard));
   }
@@ -80,7 +80,7 @@ class ProductRepositoryIT {
         169.40D);
 
     assertThat(repository.findByName("mouse-m2"))
-        .contains(new Product("mouseId", "mouse-m2", "mouse Bluetooth", 140.0D, 0.21D, 169.40D));
+        .contains(new Product("mouse-m2", "mouse Bluetooth", 140.0D, 0.21D, 169.40D));
   }
 
 }

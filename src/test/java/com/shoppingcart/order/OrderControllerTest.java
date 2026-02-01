@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import com.shoppingcart.order.OrderController.AddRequest;
 import com.shoppingcart.order.OrderController.RequestItem;
 import com.shoppingcart.order.OrderController.UpdateOrderRequest;
-import com.shoppingcart.order.OrderDTO.OrderItemDTO;
+import com.shoppingcart.order.OrderDto.OrderItemDTO;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,21 +39,21 @@ class OrderControllerTest {
   @MockitoBean
   OrderService service;
 
-  OrderDTO order1;
-  OrderDTO order2;
+  OrderDto order1;
+  OrderDto order2;
 
   @BeforeEach
   void setup() {
-    ProductDTO pencil = new ProductDTO("pencil", "pencil HB", 2.3, 0.22, 2.81);
-    ProductDTO pen = new ProductDTO("pen", "blue pen", 2.3, 0.22, 2.81);
-    order1 = new OrderDTO(
+    ProductDto pencil = new ProductDto("pencil", "pencil HB", 2.3, 0.22, 2.81);
+    ProductDto pen = new ProductDto("pen", "blue pen", 2.3, 0.22, 2.81);
+    order1 = new OrderDto(
         "1",
         4.6,
         0.5,
         5.1,
         List.of(new OrderItemDTO(pencil, 2))
     );
-    order2 = new OrderDTO(
+    order2 = new OrderDto(
         "2",
         6.9,
         0.7,

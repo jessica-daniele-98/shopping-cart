@@ -10,7 +10,7 @@ import com.shoppingcart.order.Order.OrderItem;
 import com.shoppingcart.order.OrderController.AddRequest;
 import com.shoppingcart.order.OrderController.RequestItem;
 import com.shoppingcart.order.OrderController.UpdateOrderRequest;
-import com.shoppingcart.order.OrderDTO.OrderItemDTO;
+import com.shoppingcart.order.OrderDto.OrderItemDTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -38,33 +38,33 @@ class OrderServiceTest {
   @BeforeEach
   void setup() {
     orderService = new OrderService(orderRepository, productService);
-    pen = new Product(null, "pen", "blue pen", 10.0D, 0.20D, 12.0D);
-    pencil = new Product(null, "pencil", "pencil HB", 5.0D, 0.10D, 5.5D);
+    pen = new Product("pen", "blue pen", 10.0D, 0.20D, 12.0D);
+    pencil = new Product("pencil", "pencil HB", 5.0D, 0.10D, 5.5D);
   }
 
   @Test
   void getOrdersShouldReturnFoundOrder() {
     OrderItem item = new OrderItem(pen, 2);
-    Order order = new Order("id1", "order-1", LocalDate.now(), 20.0D, 4.0D, 24.0D, List.of(item));
+    Order order = new Order("order-1", LocalDate.now(), 20.0D, 4.0D, 24.0D, List.of(item));
     given(orderRepository.findAll()).willReturn(List.of(order));
 
-    List<OrderDTO> result = orderService.getOrders();
+    List<OrderDto> result = orderService.getOrders();
 
     assertThat(result)
         .hasSize(1)
-        .containsExactlyInAnyOrder(OrderDTO.from(order));
+        .containsExactlyInAnyOrder(OrderDto.from(order));
   }
 
   @Test
   void getOrderByOrderIdShouldReturnFoundOrder() {
     OrderItem item = new OrderItem(pencil, 3);
-    Order order = new Order("id2", "order-2", LocalDate.now(), 15.0D, 1.5D, 16.5D, List.of(item));
+    Order order = new Order("order-2", LocalDate.now(), 15.0D, 1.5D, 16.5D, List.of(item));
     given(orderRepository.findByOrderId("order-2")).willReturn(Optional.of(order));
 
-    OrderDTO result = orderService.getOrderByOrderId("order-2");
+    OrderDto result = orderService.getOrderByOrderId("order-2");
 
     assertThat(result)
-        .isEqualTo(OrderDTO.from(order));
+        .isEqualTo(OrderDto.from(order));
   }
 
   @Test
@@ -84,20 +84,20 @@ class OrderServiceTest {
     ArgumentCaptor<Order> savedCaptor = ArgumentCaptor.forClass(Order.class);
     when(orderRepository.save(savedCaptor.capture())).thenAnswer(inv -> inv.getArgument(0));
 
-    OrderDTO result = orderService.addOrder(addRequest);
+    OrderDto result = orderService.addOrder(addRequest);
 
     assertThat(result)
         .usingRecursiveComparison()
         .ignoringFields("orderId")
-        .isEqualTo(new OrderDTO("order-id", 25.0D, 4.5D, 29.5D, List.of(
-            new OrderItemDTO(ProductDTO.from(pen), 2),
-            new OrderItemDTO(ProductDTO.from(pencil), 1)
+        .isEqualTo(new OrderDto("order-id", 25.0D, 4.5D, 29.5D, List.of(
+            new OrderItemDTO(ProductDto.from(pen), 2),
+            new OrderItemDTO(ProductDto.from(pencil), 1)
         )));
     Order saved = savedCaptor.getValue();
     assertThat(saved)
         .usingRecursiveComparison()
         .ignoringFields("id", "orderId", "createdAt")
-        .isEqualTo(new Order(null, "order-id", LocalDate.now(), 25.0D, 4.5D, 29.5D, List.of(
+        .isEqualTo(new Order("order-id", LocalDate.now(), 25.0D, 4.5D, 29.5D, List.of(
             new OrderItem(pen, 2),
             new OrderItem(pencil, 1)
         )));

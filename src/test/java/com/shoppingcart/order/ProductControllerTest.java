@@ -38,13 +38,13 @@ class ProductControllerTest {
   @MockitoBean
   ProductService service;
 
-  ProductDTO pencil;
-  ProductDTO pen;
+  ProductDto pencil;
+  ProductDto pen;
 
   @BeforeEach
   void setup() {
-    pencil = new ProductDTO("pencil", "pencil HB", 2.3D, 0.22D, 2.81D);
-    pen = new ProductDTO("pen", "blue pen", 2.3D, 0.22D, 2.81D);
+    pencil = new ProductDto("pencil", "pencil HB", 2.3D, 0.22D, 2.81D);
+    pen = new ProductDto("pen", "blue pen", 2.3D, 0.22D, 2.81D);
   }
 
   @Test
