@@ -2,7 +2,11 @@ spring:
   application:
     name: shopping-cart
   mongodb:
-    uri: mongodb://localhost/test
+    uri: mongodb://mongo:27017/shopping-cart
+    database: shopping-cart
   data:
     mongodb:
       auto-index-creation: true
+
+server:
+  port: 8080
