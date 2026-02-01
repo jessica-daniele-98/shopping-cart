@@ -1,5 +1,9 @@
 package com.shoppingcart.order;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,18 +31,22 @@ class OrderController {
   }
 
   @PostMapping("/orders")
-  OrderDTO addOrder(@RequestBody AddRequest request) {
+  OrderDTO addOrder(
+      @RequestBody
+      @Valid
+      AddRequest request) {
     return orderService.addOrder(request);
   }
 
   @PutMapping("/orders/{id}")
-  OrderDTO updateOrder(
+  void updateOrder(
       @PathVariable
       String id,
       @RequestBody
+      @Valid
       UpdateOrderRequest request
   ) {
-    return orderService.updateOrder(id, request);
+    orderService.updateOrder(id, request);
   }
 
   @DeleteMapping("/orders/{id}")
@@ -46,15 +54,15 @@ class OrderController {
     orderService.deleteOrder(id);
   }
 
-  record AddRequest(List<RequestItem> products) {
+  record AddRequest(@NotEmpty List<RequestItem> products) {
 
   }
 
-  record UpdateOrderRequest(List<RequestItem> products) {
+  record UpdateOrderRequest(@NotEmpty List<RequestItem> products) {
 
   }
 
-  record RequestItem(String productName, int quantity) {
+  record RequestItem(@NotNull String productName, @Positive int quantity) {
 
   }
 }

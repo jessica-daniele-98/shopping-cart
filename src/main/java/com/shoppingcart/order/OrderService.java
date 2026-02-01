@@ -52,7 +52,7 @@ class OrderService {
     return OrderDTO.from(orderRepository.save(order));
   }
 
-  public OrderDTO updateOrder(String id, UpdateOrderRequest request) {
+  void updateOrder(String id, UpdateOrderRequest request) {
     List<OrderItem> orderItems = request
         .products()
         .stream()
@@ -61,8 +61,7 @@ class OrderService {
     double totalPrice = calculateTotalPrice(orderItems);
     double totalVat = calculateTotalVat(orderItems);
     double totalPriceWithVat = calculateTotalPriceWithVat(orderItems);
-    return OrderDTO.from(
-        orderRepository.updateOrder(id, totalPrice, totalVat, totalPriceWithVat, orderItems));
+    orderRepository.updateOrder(id, totalPrice, totalVat, totalPriceWithVat, orderItems);
   }
 
   void deleteOrder(String orderId) {

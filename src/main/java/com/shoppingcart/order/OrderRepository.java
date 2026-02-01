@@ -15,6 +15,6 @@ interface OrderRepository extends MongoRepository<Order, String> {
 
   @Query("{ orderId:  ?0 }")
   @Update("{ set: { totalPrice: ?1, totalVat:  ?2, totalWithVat:  ?3, products: ?4 } }")
-  Order updateOrder(String id, double totalPrice, double totalVat, double totalPriceWithVat, List<OrderItem> products);
+  void updateOrder(String id, double totalPrice, double totalVat, double totalPriceWithVat, List<OrderItem> products);
 
 }

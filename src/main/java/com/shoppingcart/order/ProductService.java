@@ -2,6 +2,8 @@ package com.shoppingcart.order;
 
 import com.shoppingcart.order.ProductController.AddProductRequest;
 import com.shoppingcart.order.ProductController.ProductUpdateRequest;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -48,16 +50,19 @@ class ProductService {
     productRepository.deleteByName(name);
   }
 
-  ProductDTO updateProduct(String productName, ProductUpdateRequest updateRequest) {
+  void updateProduct(String productName, ProductUpdateRequest updateRequest) {
     double newPrice = updateRequest.price();
     double newVatRate = updateRequest.vatRate();
     double newPriceWithVat = calculatePriceWithVat(newPrice, newVatRate);
-    return ProductDTO.from(productRepository
-        .updateProductByName(productName, newPrice, newVatRate, newPriceWithVat));
+    productRepository
+        .updateProductByName(productName, updateRequest.description(), newPrice, newVatRate,
+            newPriceWithVat);
   }
 
   private double calculatePriceWithVat(double price, double vatRate) {
-    return price + (price * vatRate);
+    return BigDecimal.valueOf(price + (price * vatRate))
+        .setScale(2, RoundingMode.HALF_UP)
+        .doubleValue();
   }
 
 }

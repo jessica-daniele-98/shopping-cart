@@ -12,6 +12,6 @@ interface ProductRepository extends MongoRepository<Product, String> {
   void deleteByName(String name);
 
   @Query("{ name: ?0 }")
-  @Update("{ set: { price: ?1, vatRate: ?2, priceWithVat: ?3 } }")
-  Product updateProductByName(String name, double price, double vatRate, double priceWithVat);
+  @Update("{ set: { price: ?1, description: ?2, vatRate: ?3, priceWithVat: ?4 } }")
+  void updateProductByName(String name, String description, double price, double vatRate, double priceWithVat);
 }
