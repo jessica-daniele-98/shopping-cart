@@ -2,7 +2,8 @@ package com.shoppingcart.order;
 
 import com.shoppingcart.order.Order.OrderItem;
 import com.shoppingcart.order.OrderController.AddRequest;
-import com.shoppingcart.order.OrderController.AddRequest.RequestItem;
+import com.shoppingcart.order.OrderController.RequestItem;
+import com.shoppingcart.order.OrderController.UpdateOrderRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -39,16 +40,29 @@ class OrderService {
         .toList();
     double totalPrice = calculateTotalPrice(orderItems);
     double totalVat = calculateTotalVat(orderItems);
-    double priceWithVat = calculateTotalPriceWithVat(orderItems);
+    double totalPriceWithVat = calculateTotalPriceWithVat(orderItems);
     Order order = new Order(
         null,
         UUID.randomUUID().toString(),
         LocalDate.now(),
         totalPrice,
         totalVat,
-        priceWithVat,
+        totalPriceWithVat,
         orderItems);
     return OrderDTO.from(orderRepository.save(order));
+  }
+
+  public OrderDTO updateOrder(String id, UpdateOrderRequest request) {
+    List<OrderItem> orderItems = request
+        .products()
+        .stream()
+        .map(this::toOrderItem)
+        .toList();
+    double totalPrice = calculateTotalPrice(orderItems);
+    double totalVat = calculateTotalVat(orderItems);
+    double totalPriceWithVat = calculateTotalPriceWithVat(orderItems);
+    return OrderDTO.from(
+        orderRepository.updateOrder(id, totalPrice, totalVat, totalPriceWithVat, orderItems));
   }
 
   void deleteOrder(String orderId) {

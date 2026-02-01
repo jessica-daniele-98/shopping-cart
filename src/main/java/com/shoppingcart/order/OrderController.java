@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +31,16 @@ class OrderController {
     return orderService.addOrder(request);
   }
 
+  @PutMapping("/orders/{id}")
+  OrderDTO updateOrder(
+      @PathVariable
+      String id,
+      @RequestBody
+      UpdateOrderRequest request
+  ) {
+    return orderService.updateOrder(id, request);
+  }
+
   @DeleteMapping("/orders/{id}")
   void deleteOrder(@PathVariable String id) {
     orderService.deleteOrder(id);
@@ -37,8 +48,13 @@ class OrderController {
 
   record AddRequest(List<RequestItem> products) {
 
-    record RequestItem(String productName, int quantity) {
+  }
 
-    }
+  record UpdateOrderRequest(List<RequestItem> products) {
+
+  }
+
+  record RequestItem(String productName, int quantity) {
+
   }
 }
