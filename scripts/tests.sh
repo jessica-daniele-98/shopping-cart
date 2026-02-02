@@ -8,7 +8,7 @@ echo "Start docker compose..."
 docker-compose -f docker-compose.yaml up -d --no-build
 
 echo "Running tests..."
-cd .. && mvn -f docker-compose.yaml clean install
+cd .. && mvn clean install
 
 echo "Stopping container..."
 docker-compose -f docker-compose.yaml down
